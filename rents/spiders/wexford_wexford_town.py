@@ -1,6 +1,15 @@
 import scrapy
 import requests
 import json
+import time
+from scrapy.utils.project import get_project_settings
+from scrapy.crawler import CrawlerProcess
+from twisted.internet.task import LoopingCall
+from twisted.internet import reactor
+from scrapy.utils.log import configure_logging
+
+
+
 
 class WexfordWexfordTownSpider(scrapy.Spider):
     name = "wexford_wexford_town"
@@ -25,6 +34,7 @@ class WexfordWexfordTownSpider(scrapy.Spider):
             with open("config.json", 'w+') as writer:
                 configs = {"token": "", "chat_id": ""}
                 writer.write(json.dumps(configs))
+
     def init_mem_cache(self):
         if not self.mem_cache:
             try:
@@ -68,10 +78,16 @@ class WexfordWexfordTownSpider(scrapy.Spider):
             self.update_mem_cache(request_url)
             message = f"""Link: {request_url}\nDescricao: {ad_header}\nPreco: {ad_price}\n"""
             self.send_message(message)
-    
+
     def send_message(self, text):
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
         response = requests.post(url, json={'chat_id': self.chat_id, 'text': text})
         print(response)
 
 
+if __name__ == "__main__":
+    configure_logging()
+    process = CrawlerProcess()
+    task = LoopingCall(lambda: process.crawl(WexfordWexfordTownSpider))
+    task.start(5)
+    reactor.run()

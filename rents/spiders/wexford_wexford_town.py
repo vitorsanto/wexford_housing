@@ -70,8 +70,6 @@ class WexfordWexfordTownSpider(scrapy.Spider):
             self.send_message(message)
     
     def send_message(self, text):
-        # token = "6426070828:AAEuQ3yTh7R9-SV56Elp0-ACw5XiRsRe1KY"
-        # chat_id = "617583448"
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
         response = requests.post(url, json={'chat_id': self.chat_id, 'text': text})
         print(response)

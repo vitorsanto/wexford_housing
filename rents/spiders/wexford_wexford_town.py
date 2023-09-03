@@ -89,5 +89,5 @@ if __name__ == "__main__":
     configure_logging()
     process = CrawlerProcess()
     task = LoopingCall(lambda: process.crawl(WexfordWexfordTownSpider))
-    task.start(5)
+    task.start(1)
     reactor.run()

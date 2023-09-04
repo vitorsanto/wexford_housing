@@ -82,12 +82,12 @@ class WexfordWexfordTownSpider(scrapy.Spider):
     def send_message(self, text):
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
         response = requests.post(url, json={'chat_id': self.chat_id, 'text': text})
-        print(response)
+        print(response.text)
 
 
 if __name__ == "__main__":
     configure_logging()
     process = CrawlerProcess()
     task = LoopingCall(lambda: process.crawl(WexfordWexfordTownSpider))
-    task.start(1)
+    task.start(60)
     reactor.run()
